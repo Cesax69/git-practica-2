@@ -15,8 +15,6 @@ Repositorio para la **Práctica 2 del Taller de Git**. Contiene el registro de c
 git init
 ```
 
-> **Captura:** resultado del comando `git init` mostrando la ruta del repositorio inicializado.
-
 ---
 
 ### 2. Crear `index.html` y comprobar el estado
@@ -24,8 +22,6 @@ git init
 ```bash
 git status
 ```
-
-> **Captura:** `git status` mostrando `index.html` como fichero **untracked** (en rojo).
 
 ---
 
@@ -36,8 +32,6 @@ git add index.html
 git commit -m "agregar fichero index.html inicial"
 ```
 
-> **Captura:** resultado del `git commit` con el hash del commit y `1 file changed`.
-
 ---
 
 ### 4. Añadir `description.html` y modificar `index.html`
@@ -47,9 +41,6 @@ git status
 git diff
 ```
 
-> **Captura 1:** `git status` mostrando `index.html` como **modified** (amarillo) y `description.html` como **untracked** (rojo).  
-> **Captura 2:** `git diff` mostrando las líneas nuevas en verde dentro de `index.html`.
-
 ---
 
 ### 5. Crear `TODO.txt` y comprobar que Git lo detecta
@@ -57,8 +48,6 @@ git diff
 ```bash
 git status
 ```
-
-> **Captura:** `git status` mostrando `TODO.txt` como **untracked**.
 
 ---
 
@@ -73,8 +62,6 @@ TODO.txt
 git status
 ```
 
-> **Captura:** `git status` mostrando únicamente `.gitignore` como untracked — `TODO.txt` ya **no aparece**.
-
 ---
 
 ### 7. Añadir y confirmar `.gitignore`
@@ -84,8 +71,6 @@ git add .gitignore
 git commit -m "agregar gitignore para excluir tareas personales"
 ```
 
-> **Captura:** resultado del commit.
-
 ---
 
 ### 8. Log del repositorio local
@@ -93,8 +78,6 @@ git commit -m "agregar gitignore para excluir tareas personales"
 ```bash
 git log --oneline --graph --all
 ```
-
-> **Captura:** historial de commits del repositorio `practica-taller-git`.
 
 ---
 
@@ -106,8 +89,6 @@ git log --oneline --graph --all
 git clone https://github.com/Cesax69/git-practica-2.git
 ```
 
-> **Captura:** salida del `git clone` con los objetos descargados.
-
 ---
 
 ### 10. Crear el fichero personal y subirlo
@@ -117,8 +98,6 @@ git add Cesax69.html
 git commit -m "agregar pagina personal de Cesax69"
 git push
 ```
-
-> **Captura:** resultado del `git push` mostrando la rama `main` actualizada en el remoto.
 
 ---
 
@@ -132,9 +111,6 @@ git commit -m "agregar seccion de proyectos y respuestas del taller"
 git push origin develop
 ```
 
-> **Captura 1:** `git checkout -b develop` confirmando el cambio de rama.  
-> **Captura 2:** `git push origin develop` con `* [new branch] develop -> develop`.
-
 ---
 
 ### 12. Log final con ramas
@@ -143,14 +119,11 @@ git push origin develop
 git log --oneline --graph --all
 ```
 
-> **Captura:** grafo de commits mostrando `main` y `develop`.
-
 ---
 
 ### 13. Pull Request en GitHub
 
-> **Captura:** pantalla de GitHub mostrando el Pull Request de `develop → main` antes de fusionar.  
-> **Captura:** confirmación del merge exitoso.
+Desde GitHub: crear Pull Request de `develop → main` y fusionarlo.
 
 ---
 
