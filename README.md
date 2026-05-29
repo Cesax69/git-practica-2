@@ -1,92 +1,118 @@
-# git practica 2
-Taller GIT. Práctica 2.
-Guarda los comandos realizados, así como los resultados(capturas), integrarlo dentro del mismo repositorio
+# Taller Git · Práctica 2
+**Alumno:** César Enrique Garay García · **GitHub:** [@Cesax69](https://github.com/Cesax69)
 
-## Trabajar con un proyecto HTML y un repositorio local.
-- Crea una carpeta practica-taller-git en tu pc.
-- Inicializa el repositorio. 
- ```bash
- git init
- ```
-- Crea el fichero index.html con un html simple.
-- Comprueba que el repositorio a detectado el cambio. 
-```bash
-git status
-```
-- Añade el fichero al stage. 
-```bash
-git add index.html.
-```
-- Confirma los cambios. 
-```bash
-git commit -m “added index file”
-```
-- Añade un fichero description.html y edita index.html.
-- Comprueba que ha detectado el nuevo fichero y la modificación de index.
-```bash
-git status
-git diff
-```
-- Crea un fichero TODO.txt de tareas pendientes.
-- Comprueba que git ha detectado el nuevo fichero. 
-```bash
-git status
-```
-- Ignora el fichero TODO.txt ya que es donde anotaremos nuestras tareas personales y no debe formar parte del proyecto. Para ello crea un fichero .gitignore con la linea TODO.txt.
-- Comprueba que ya no detecta el nuevo fichero TODO.txt (si que detectara el .gitignore claro). 
-```bash
-git status
-```
-- Añade y confirma el .gitignore.
-- Puedes continuar añadiendo ficheros html, css e imágenes para probar el repositorio.
+Repositorio para la **Práctica 2 del Taller de Git**. Contiene el registro completo de los comandos ejecutados, sus resultados (capturas de terminal) y las respuestas al cuestionario.
 
+---
 
-## Haz un fork del repositorio creado para la práctica del taller:
-- Entra en https://github.com/
-- Accede a tu cuenta.
-- Accede al repositorio del profesor https://github.com/lalobarri/git-practica-2.git
-- Pulsa el botón fork (parte superior derecha) para crearte una copia del mismo en tu cuenta.
-- Clona el repositorio en tu equipo *en otra carpeta diferente que la llamaremos 'git-practica-2'*. Quedará algo parecido a lo siguiente:
+## Parte 1 — Repositorio Local (`practica-taller-git`)
+
+### 1. `git init` · Crear el repositorio + primer `git status` + `git add` + `git commit`
+
+Se creó la carpeta `practica-taller-git`, se inicializó el repositorio con `git init`, se creó `index.html` y se realizó el primer commit.
+
+![git init, git status, git add y git commit](capturas/01-git-init-add-commit.png)
+
 ```bash
-git clone https://github.com/[tu-nombre-de-usuario]/git-practica-2.git
+git init
+git status              # index.html aparece como "untracked"
+git add index.html
+git commit -m "agregar fichero index.html inicial"
 ```
-- Crea un nuevo fichero en el proyecto que se llame [tu-nombre-de-usuario].html
-- Edita el fichero añadiendo como título tu nombre, algún texto y lo que desees en el.
-- Añade el fichero al repositorio.
-- Súbelo al repositorio remoto (github). 
+
+---
+
+### 2. `git status` + `git diff` — Añadir `description.html` y modificar `index.html`
+
+Se creó el fichero `description.html` y se modificó `index.html` añadiendo una barra de navegación y un footer. Git detecta ambos cambios.
+
+![git status mostrando modified y untracked, y git diff con las líneas añadidas](capturas/02-git-status-diff.png)
+
 ```bash
+git status   # muestra: modified: index.html  |  untracked: description.html
+git diff     # muestra exactamente qué líneas cambiaron dentro de index.html
+```
+
+---
+
+### 3. `.gitignore` — Ignorar `TODO.txt`
+
+Se creó el fichero `TODO.txt` de tareas personales. Antes de crear el `.gitignore`, Git lo detectaba. Después de crearlo con la línea `TODO.txt`, desapareció del rastreo.
+
+![git status antes y después de crear .gitignore — TODO.txt desaparece](capturas/03-git-gitignore-todo.png)
+
+```bash
+# Contenido del .gitignore:
+TODO.txt
+
+git status   # TODO.txt ya NO aparece — solo .gitignore y description.html
+git add .gitignore description.html index.html
+git commit -m "agregar pagina de descripcion, actualizar navegacion e ignorar TODO.txt"
+```
+
+---
+
+### 4. `git log` + `git branch` — Historial y ramas
+
+Vista del historial de commits, las ramas locales y el remote configurado al repositorio forkeado.
+
+![git log --oneline --graph --all mostrando commits y ramas main y develop](capturas/04-git-log-branch.png)
+
+```bash
+git log --oneline --graph --all
+git branch -a
+git remote -v
+```
+
+---
+
+## Parte 2 — Fork y Clon (`git-practica-2`)
+
+### Flujo de trabajo realizado
+
+```bash
+# 1. Fork del repositorio del profesor en GitHub (botón Fork)
+# 2. Clonar el fork personal
+git clone https://github.com/Cesax69/git-practica-2.git
+
+# 3. Crear el fichero personal
+# → Cesax69.html (con nombre, información y diseño propio)
+
+# 4. Añadir y confirmar
+git add Cesax69.html
+git commit -m "agregar pagina personal de Cesax69 (Cesar Enrique Garay Garcia)"
+
+# 5. Subir al remoto  ← pendiente de revisión
 git push
-```
-- Crea una rama develop y cámbiate a ella.
-```bash
+
+# 6. Crear rama develop y cambiarse a ella
 git checkout -b develop
-```
-- Realiza cambios en el proyecto, confírmalos y súbelos al repositorio remoto.
-```bash
+
+# 7. Realizar cambios, confirmar y subir
 git status
 git add *
-git commit -m "Mensaje del commit..."
-git push origin
+git commit -m "agregar seccion de proyectos destacados en rama develop"
+git push origin develop  ← pendiente de revisión
+
+# 8. Desde GitHub → crear Pull Request: develop → main
+# 9. Fusionar (Merge) el Pull Request
 ```
-- Desde github crea un pull request de la rama develop a main.
-- Fusiona la rama develop con en main. No deberías de tener ningún conflicto.
-- Haz nuevos cambios en el proyecto siguiendo el flujo de trabajo git flow.
 
+### Archivos del repositorio
 
-## Preguntas
-Crea un nuevo fichero respuestas.md, contesta las siguientes preguntas y súbelo a tu repositorio remoto de github:
+| Archivo | Descripción |
+|---|---|
+| [`Cesax69.html`](Cesax69.html) | Página personal del alumno con nombre, tecnologías y proyectos |
+| [`respuestas.md`](respuestas.md) | Respuestas completas a las 11 preguntas del taller |
+| [`bitacora-git.html`](bitacora-git.html) | Visor interactivo de terminal con todos los comandos ejecutados |
+| `capturas/` | Carpeta con las 4 capturas de terminal de la Parte 1 |
 
- 1. ¿Qué sucede cuando hacemos un git add?
- 2. ¿Qué sucede cuando hacemos un git commit? ¿Dónde está ese commit? 
- 3. ¿Por qué al hacer git commit todavía no está disponible ese commit en el repositorio remoto?
- 4. ¿Qué hay que hacer para que veamos este commit en nuestro repositorio remoto de github?
- 5. ¿Qué diferencia hay entre hacer un fork o crear una nueva rama?
- 6. ¿Qué comando se utiliza para crear una nueva rama sin cambiarte a ella?
- 7. ¿Cuál es la diferencia entre los comandos git switch y git checkout al trabajar con ramas?
- 8. ¿Qué es una rama por defecto (como main o master) y por qué es importante?
- 9. ¿Qué comando te permite ver la lista de todas las ramas locales de tu repositorio?
- 10. En el contexto de Git, explica con tus propias palabras qué es una rama (branch) y cuál es su beneficio principal al trabajar en un proyecto de software
- 11. ¿Qué ha pasado con el contenido de la carpeta practica-taller-git? ¿Por qué no la podemos ver en nuestro repositorio remoto de github?
+---
 
+## Respuestas
 
-*Utilice un formato que permita distinguir entre sus preguntas y respuestas*
+Las respuestas a las 11 preguntas se encuentran en el fichero **[`respuestas.md`](respuestas.md)**.
+
+---
+
+*Taller Git · Práctica 2 · César Enrique Garay García · 2026*
