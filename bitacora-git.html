@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Bitácora interactiva de comandos Git - Taller Git Práctica 2 - César Enrique Garay García">
+    <title>Bitácora Git · Práctica 2 · Cesax69</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary:    #00d4ff;
+            --success:    #3fb950;
+            --warning:    #d29922;
+            --error:      #f85149;
+            --branch:     #bc8cff;
+            --bg:         #0d1117;
+            --surface:    #161b22;
+            --surface2:   #1c2128;
+            --border:     #30363d;
+            --text:       #c9d1d9;
+            --text-dim:   #8b949e;
+            --heading:    #f0f6fc;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+        }
+
+        /* ── HEADER ── */
+        header {
+            background: linear-gradient(135deg, #0d1117 0%, #161b22 100%);
+            border-bottom: 1px solid var(--border);
+            padding: 2rem 3rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .header-left h1 {
+            font-size: 1.6rem;
+            color: var(--heading);
+            font-weight: 700;
+        }
+
+        .header-left p {
+            color: var(--text-dim);
+            font-size: 0.9rem;
+            margin-top: 0.25rem;
+        }
+
+        .header-badge {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.78rem;
+            font-weight: 600;
+        }
+
+        .badge-blue  { background: rgba(0,212,255,0.12); border: 1px solid rgba(0,212,255,0.3); color: var(--primary); }
+        .badge-green { background: rgba(63,185,80,0.12); border: 1px solid rgba(63,185,80,0.3); color: var(--success); }
+        .badge-purple{ background: rgba(188,140,255,0.12); border: 1px solid rgba(188,140,255,0.3); color: var(--branch); }
+
+        /* ── LAYOUT ── */
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 2rem 3rem;
+        }
+
+        /* ── SECTION TITLE ── */
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin: 2.5rem 0 1rem;
+        }
+
+        .section-icon {
+            width: 36px; height: 36px;
+            border-radius: 8px;
+            background: rgba(0,212,255,0.1);
+            border: 1px solid rgba(0,212,255,0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+        }
+
+        .section-title {
+            color: var(--heading);
+            font-size: 1.15rem;
+            font-weight: 600;
+        }
+
+        .section-subtitle {
+            color: var(--text-dim);
+            font-size: 0.85rem;
+        }
+
+        /* ── TERMINAL BLOCK ── */
+        .terminal {
+            background: #010409;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            overflow: hidden;
+            margin: 0.75rem 0 1.5rem;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.4);
+        }
+
+        .terminal-titlebar {
+            background: var(--surface2);
+            border-bottom: 1px solid var(--border);
+            padding: 0.6rem 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .dot { width:12px; height:12px; border-radius:50%; }
+        .dot-red    { background:#ff5f57; }
+        .dot-yellow { background:#febc2e; }
+        .dot-green  { background:#28c840; }
+
+        .terminal-label {
+            margin-left: auto;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.72rem;
+            color: var(--text-dim);
+        }
+
+        .terminal-body {
+            padding: 1.25rem 1.5rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.87rem;
+            line-height: 1.7;
+        }
+
+        .cmd-line { display: flex; gap: 0.5rem; margin-bottom: 0.2rem; }
+        .prompt { color: var(--success); flex-shrink: 0; }
+        .prompt-path { color: var(--branch); }
+        .cmd { color: #79c0ff; }
+
+        .output { color: var(--text); padding-left: 1.5rem; white-space: pre-wrap; }
+        .output-success { color: var(--success); }
+        .output-warning { color: var(--warning); }
+        .output-error   { color: var(--error); }
+        .output-info    { color: var(--primary); }
+        .output-dim     { color: var(--text-dim); }
+        .output-branch  { color: var(--branch); }
+
+        /* ── EXPLANATION BOX ── */
+        .explain {
+            background: rgba(0,212,255,0.04);
+            border-left: 3px solid var(--primary);
+            border-radius: 0 8px 8px 0;
+            padding: 0.9rem 1.2rem;
+            margin: 0 0 1.5rem;
+            font-size: 0.9rem;
+            line-height: 1.65;
+            color: var(--text);
+        }
+
+        .explain strong { color: var(--heading); }
+        .explain code {
+            background: rgba(255,255,255,0.08);
+            padding: 0.1em 0.4em;
+            border-radius: 4px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85em;
+            color: var(--primary);
+        }
+
+        /* ── STEP DIVIDER ── */
+        .step-divider {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin: 2rem 0 1rem;
+        }
+
+        .step-num {
+            background: linear-gradient(135deg, #00d4ff22, #7b5ea722);
+            border: 1px solid rgba(0,212,255,0.3);
+            color: var(--primary);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            font-weight: 700;
+            padding: 0.25rem 0.6rem;
+            border-radius: 6px;
+        }
+
+        .step-label {
+            color: var(--heading);
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .step-line {
+            flex: 1;
+            height: 1px;
+            background: var(--border);
+        }
+
+        /* ── GIT GRAPH ── */
+        .git-graph {
+            background: #010409;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.25rem 1.5rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            line-height: 1.8;
+        }
+
+        .g-main   { color: var(--success); }
+        .g-develop{ color: var(--branch); }
+        .g-hash   { color: var(--text-dim); }
+        .g-msg    { color: var(--text); }
+
+        /* ── FOOTER ── */
+        footer {
+            border-top: 1px solid var(--border);
+            padding: 1.5rem 3rem;
+            text-align: center;
+            color: var(--text-dim);
+            font-size: 0.82rem;
+            margin-top: 3rem;
+        }
+
+        @media(max-width:600px){
+            header, .container { padding: 1.25rem 1rem; }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="header-left">
+        <h1>🗂️ Bitácora Git · Práctica 2</h1>
+        <p>Registro completo de comandos ejecutados y sus resultados</p>
+    </div>
+    <div class="header-badge">
+        <span class="badge badge-blue">👤 Cesax69</span>
+        <span class="badge badge-green">✅ Sin push pendiente</span>
+        <span class="badge badge-purple">🌿 2 repos locales</span>
+    </div>
+</header>
+
+<div class="container">
+
+    <!-- ═══════════════════════════════════════════════
+         PARTE 1 — REPOSITORIO LOCAL: practica-taller-git
+    ═══════════════════════════════════════════════ -->
+    <div class="section-header">
+        <div class="section-icon">📁</div>
+        <div>
+            <div class="section-title">Parte 1 — Repositorio Local</div>
+            <div class="section-subtitle">Carpeta: practica-taller-git/</div>
+        </div>
+    </div>
+
+    <!-- PASO 1 -->
+    <div class="step-divider">
+        <span class="step-num">01</span>
+        <span class="step-label">Inicializar el repositorio</span>
+        <div class="step-line"></div>
+    </div>
+
+    <div class="terminal">
+        <div class="terminal-titlebar">
+            <div class="dot dot-red"></div><div class="dot dot-yellow"></div><div class="dot dot-green"></div>
+            <span class="terminal-label">practica-taller-git</span>
+        </div>
+        <div class="terminal-body">
+            <div class="cmd-line">
+                <span class="prompt">$</span>
+                <span class="cmd">git init</span>
+            </div>
+            <div class="output output-success">Initialized empty Git repository in C:/Users/cesar/Downloads/practica/practica-taller-git/.git/</div>
+        </div>
+    </div>
+    <div class="explain">
+        <strong>¿Qué hizo este comando?</strong> Creó la carpeta oculta <code>.git/</code> dentro del directorio. A partir de ahora Git rastreará todos los cambios de esta carpeta. Este es el "cerebro" del repositorio local.
+    </div>
+
+    <!-- PASO 2 -->
+    <div class="step-divider">
+        <span class="step-num">02</span>
+        <span class="step-label">Crear index.html y comprobar estado</span>
+        <div class="step-line"></div>
+    </div>
+
+    <div class="terminal">
+        <div class="terminal-titlebar">
+            <div class="dot dot-red"></div><div class="dot dot-yellow"></div><div class="dot dot-green"></div>
+            <span class="terminal-label">practica-taller-git — git status</span>
+        </div>
+        <div class="terminal-body">
+            <div class="cmd-line"><span class="prompt">$</span><span class="cmd">git status</span></div>
+            <div class="output">On branch <span class="output-branch">master</span>
+
+No commits yet
+
+<span class="output-error">Untracked files:</span>
+  (use "git add &lt;file&gt;..." to include in what will be committed)
+	<span class="output-error">index.html</span>
+
+nothing added to commit but untracked files present (use "git add" to track)</div>
+        </div>
+    </div>
+    <div class="explain">
+        Git detecta <code>index.html</code> como fichero <strong>no rastreado (untracked)</strong>. Existe en el directorio pero Git aún no lo conoce — no está en ningún commit ni en el stage.
+    </div>
+
+    <!-- PASO 3 -->
+    <div class="step-divider">
+        <span class="step-num">03</span>
+        <span class="step-label">git add + primer commit</span>
+        <div class="step-line"></div>
+    </div>
+
+    <div class="terminal">
+        <div class="terminal-titlebar">
+            <div class="dot dot-red"></div><div class="dot dot-yellow"></div><div class="dot dot-green"></div>
+            <span class="terminal-label">practica-taller-git — git add &amp; commit</span>
+        </div>
+        <div class="terminal-body">
+            <div class="cmd-line"><span class="prompt">$</span><span class="cmd">git add index.html</span></div>
+            <div class="output output-dim"># Sin salida — el fichero pasó al Staging Area</div>
+            <br>
+            <div class="cmd-line"><span class="prompt">$</span><span class="cmd">git commit -m "agregar fichero index.html inicial"</span></div>
+            <div class="output output-success">[master (root-commit) 663da4d] agregar fichero index.html inicial
+ 1 file changed, 13 insertions(+)
+ create mode 100644 index.html</div>
+        </div>
+    </div>
+
+    <!-- PASO 4 -->
+    <div class="step-divider">
+        <span class="step-num">04</span>
+        <span class="step-label">Añadir description.html + modificar index.html</span>
+        <div class="step-line"></div>
+    </div>
+
+    <div class="terminal">
+        <div class="terminal-titlebar">
+            <div class="dot dot-red"></div><div class="dot dot-yellow"></div><div class="dot dot-green"></div>
+            <span class="terminal-label">practica-taller-git — git status + git diff</span>
+        </div>
+        <div class="terminal-body">
+            <div class="cmd-line"><span class="prompt">$</span><span class="cmd">git status</span></div>
+            <div class="output">On branch <span class="output-branch">master</span>
+<span class="output-warning">Changes not staged for commit:</span>
+  (use "git add &lt;file&gt;..." to update what will be committed)
+	<span class="output-warning">modified:   index.html</span>
+
+<span class="output-error">Untracked files:</span>
+	<span class="output-error">description.html</span>
+
+no changes added to commit</div>
+            <br>
+            <div class="cmd-line"><span class="prompt">$</span><span class="cmd">git diff</span></div>
+            <div class="output"><span class="output-dim">diff --git a/index.html b/index.html
+--- a/index.html
++++ b/index.html
+@@ -9,5 +9,14 @@
+     &lt;h1&gt;Taller Git - Práctica 2&lt;/h1&gt;
+     &lt;p&gt;Bienvenido a mi proyecto de práctica de control de versiones con Git.&lt;/p&gt;
+     &lt;p&gt;Autor: César Enrique Garay García&lt;/p&gt;</span>
+<span class="output-success">+    &lt;nav&gt;
++        &lt;ul&gt;
++            &lt;li&gt;&lt;a href="index.html"&gt;Inicio&lt;/a&gt;&lt;/li&gt;
++            &lt;li&gt;&lt;a href="description.html"&gt;Descripción del Proyecto&lt;/a&gt;&lt;/li&gt;
++        &lt;/ul&gt;
++    &lt;/nav&gt;
++    &lt;footer&gt;
++        &lt;p&gt;Taller Git &amp;mdash; 2026&lt;/p&gt;
++    &lt;/footer&gt;</span></div>
+        </div>
+    </div>
+    <div class="explain">
+        <code>git status</code> muestra que <code>index.html</code> fue modificado (<strong>modified</strong> — en amarillo) y que <code>description.html</code> es un nuevo fichero sin rastrear (<strong>untracked</strong> — en rojo). <code>git diff</code> muestra exactamente <em>qué líneas</em> cambiaron dentro de <code>index.html</code>: las verdes son añadidos.
+    </div>
+
+    <!-- PASO 5 -->
+    <div class="step-divider">
+        <span class="step-num">05</span>
+        <span class="step-label">Crear TODO.txt — Git lo detecta</span>
+        <div class="step-line"></div>
+    </div>
+
+    <div class="terminal">
+        <div class="terminal-titlebar">
+            <div class="dot dot-red"></div><div class="dot dot-yellow"></div><div class="dot dot-green"></div>
+            <span class="terminal-label">practica-taller-git — TODO.txt detectado</span>
+        </div>
+        <div class="terminal-body">
+            <div class="cmd-line"><span class="prompt">$</span><span class="cmd">git status</span></div>
+            <div class="output">On branch <span class="output-branch">master</span>
+<span class="output-warning">Changes not staged for commit:</span>
+	<span class="output-warning">modified:   index.html</span>
+
+<span class="output-error">Untracked files:</span>
+	<span class="output-error">TODO.txt</span>
+	<span class="output-error">description.html</span>
+
+no changes added to commit</div>
+        </div>
+    </div>
+    <div class="explain">
+        Git detecta el <code>TODO.txt</code> pero todavía no lo hemos ignorado. Aparece en rojo como <strong>untracked</strong>.
+    </div>
+
+    <!-- PASO 6 -->
+    <div class="step-divider">
+        <span class="step-num">06</span>
+        <span class="step-label">Crear .gitignore — TODO.txt desaparece</span>
+        <div class="step-line"></div>
+    </div>
+
+    <div class="terminal">
+        <div class="terminal-titlebar">
+            <div class="dot dot-red"></div><div class="dot dot-yellow"></div><div class="dot dot-green"></div>
+            <span class="terminal-label">practica-taller-git — .gitignore activo</span>
+        </div>
+        <div class="terminal-body">
+            <div class="cmd-line"><span class="prompt">$</span><span class="cmd">git status</span></div>
+            <div class="output">On branch <span class="output-branch">master</span>
+<span class="output-warning">Changes not staged for commit:</span>
+	<span class="output-warning">modified:   index.html</span>
+
+<span class="output-error">Untracked files:</span>
+	<span class="output-error">.gitignore</span>
+	<span class="output-error">description.html</span>
+
+no changes added to commit</div>
+        </div>
+    </div>
+    <div class="explain">
+        ✅ <strong>TODO.txt ya no aparece.</strong> Al crear el fichero <code>.gitignore</code> con la línea <code>TODO.txt</code>, Git dejó de rastrear ese fichero. El propio <code>.gitignore</code> sí aparece como untracked — ¡es necesario añadirlo al repositorio para que funcione en otros equipos!
+    </div>
+
+    <!-- PASO 7 -->
+    <div class="step-divider">
+        <span class="step-num">07</span>
+        <span class="step-label">Commit final de la Parte 1 + log</span>
+        <div class="step-line"></div>
+    </div>
+
+    <div class="terminal">
+        <div class="terminal-titlebar">
+            <div class="dot dot-red"></div><div class="dot dot-yellow"></div><div class="dot dot-green"></div>
+            <span class="terminal-label">practica-taller-git — git log --oneline --graph</span>
+        </div>
+        <div class="terminal-body">
+            <div class="cmd-line"><span class="prompt">$</span><span class="cmd">git log --oneline --graph --all</span></div>
+            <div class="output">
+<span class="g-main">* <span class="g-hash">2bc8517</span></span> <span class="g-msg">vincular hoja de estilos CSS a las páginas HTML</span>
+<span class="g-main">* <span class="g-hash">ab096ac</span></span> <span class="g-msg">agregar hoja de estilos CSS al proyecto</span>
+<span class="g-main">* <span class="g-hash">35b5f4c</span></span> <span class="g-msg">agregar pagina de descripcion, actualizar navegacion e ignorar TODO.txt</span>
+<span class="g-main">* <span class="g-hash">663da4d</span></span> <span class="g-msg">agregar fichero index.html inicial</span></div>
+        </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════
+         PARTE 2 — FORK Y CLON: git-practica-2
+    ═══════════════════════════════════════════════ -->
+    <div class="section-header" style="margin-top:3rem;">
+        <div class="section-icon">🔀</div>
+        <div>
+            <div class="section-title">Parte 2 — Fork y Clon del Repositorio</div>
+            <div class="section-subtitle">Carpeta: git-practica-2/ · Remote: github.com/Cesax69/git-practica-2</div>
+        </div>
+    </div>
+
+    <!-- PASO 8 -->
+    <div class="step-divider">
+        <span class="step-num">08</span>
+        <span class="step-label">Clonar repositorio forkeado</span>
+        <div class="step-line"></div>
+    </div>
+
+    <div class="terminal">
+        <div class="terminal-titlebar">
+            <div class="dot dot-red"></div><div class="dot dot-yellow"></div><div class="dot dot-green"></div>
+            <span class="terminal-label">git clone</span>
+        </div>
+        <div class="terminal-body">
+            <div class="cmd-line"><span class="prompt">$</span><span class="cmd">git clone https://github.com/Cesax69/git-practica-2.git git-practica-2</span></div>
+            <div class="output output-success">Cloning into 'git-practica-2'...
+remote: Enumerating objects: 52, done.
+remote: Counting objects: 100% (52/52), done.
+Receiving objects: 100% (52/52), done.</div>
+            <br>
+            <div class="cmd-line"><span class="prompt">$</span><span class="cmd">git remote -v</span></div>
+            <div class="output">origin	https://github.com/Cesax69/git-practica-2.git (fetch)
+origin	https://github.com/Cesax69/git-practica-2.git (push)</div>
+        </div>
+    </div>
+    <div class="explain">
+        Después de hacer el <strong>fork</strong> en GitHub (botón fork en el repositorio del profesor <code>lalobarri/git-practica-2</code>), clonamos nuestra copia personal. El <code>remote origin</code> apunta ahora a nuestro fork en <code>Cesax69/git-practica-2</code>.
+    </div>
+
+    <!-- PASO 9 -->
+    <div class="step-divider">
+        <span class="step-num">09</span>
+        <span class="step-label">Crear y añadir Cesax69.html</span>
+        <div class="step-line"></div>
+    </div>
+
+    <div class="terminal">
+        <div class="terminal-titlebar">
+            <div class="dot dot-red"></div><div class="dot dot-yellow"></div><div class="dot dot-green"></div>
+            <span class="terminal-label">git-practica-2 — añadir fichero personal</span>
+        </div>
+        <div class="terminal-body">
+            <div class="cmd-line"><span class="prompt">$</span><span class="cmd">git add Cesax69.html</span></div>
+            <div class="cmd-line"><span class="prompt">$</span><span class="cmd">git commit -m "agregar pagina personal de Cesax69 (Cesar Enrique Garay Garcia)"</span></div>
+            <div class="output output-success">[main 1a4c950] agregar pagina personal de Cesax69 (Cesar Enrique Garay Garcia)
+ 1 file changed, 186 insertions(+)
+ create mode 100644 Cesax69.html</div>
+            <br>
+            <div class="cmd-line"><span class="prompt">$</span><span class="cmd"># git push  ← pendiente de revisión del alumno</span></div>
+        </div>
+    </div>
+
+    <!-- PASO 10 -->
+    <div class="step-divider">
+        <span class="step-num">10</span>
+        <span class="step-label">Crear rama develop y subir cambios</span>
+        <div class="step-line"></div>
+    </div>
+
+    <div class="terminal">
+        <div class="terminal-titlebar">
+            <div class="dot dot-red"></div><div class="dot dot-yellow"></div><div class="dot dot-green"></div>
+            <span class="terminal-label">git-practica-2 — rama develop</span>
+        </div>
+        <div class="terminal-body">
+            <div class="cmd-line"><span class="prompt">$</span><span class="cmd">git checkout -b develop</span></div>
+            <div class="output output-success">Switched to a new branch 'develop'</div>
+            <br>
+            <div class="cmd-line"><span class="prompt">$</span><span class="cmd">git status</span></div>
+            <div class="output">On branch <span class="output-branch">develop</span>
+nothing to commit, working tree clean</div>
+            <br>
+            <div class="cmd-line"><span class="prompt">$</span><span class="cmd"># [editar Cesax69.html: agregar sección de proyectos]</span></div>
+            <br>
+            <div class="cmd-line"><span class="prompt">$</span><span class="cmd">git add *</span></div>
+            <div class="cmd-line"><span class="prompt">$</span><span class="cmd">git commit -m "agregar seccion de proyectos destacados en rama develop"</span></div>
+            <div class="output output-success">[develop b2aea87] agregar seccion de proyectos destacados en rama develop
+ 1 file changed, 18 insertions(+)</div>
+            <br>
+            <div class="cmd-line"><span class="prompt">$</span><span class="cmd">git commit -m "agregar respuestas a las 11 preguntas del taller de git"</span></div>
+            <div class="output output-success">[develop 1fc8265] agregar respuestas a las 11 preguntas del taller de git
+ 1 file changed, 197 insertions(+)
+ create mode 100644 respuestas.md</div>
+            <br>
+            <div class="cmd-line"><span class="prompt">$</span><span class="cmd"># git push origin develop  ← pendiente de revisión del alumno</span></div>
+        </div>
+    </div>
+    <div class="explain">
+        Se creó la rama <code>develop</code> con <code>git checkout -b develop</code>. En ella se realizaron los cambios de mejora (sección de proyectos en <code>Cesax69.html</code>) y se añadió el fichero <code>respuestas.md</code> con las respuestas a las 11 preguntas. <strong>Los push están pendientes de aprobación del alumno.</strong> Cuando confirmes, el siguiente paso es crear el Pull Request de <code>develop → main</code> desde GitHub.
+    </div>
+
+    <!-- PASO 11 - GIT LOG FINAL -->
+    <div class="step-divider">
+        <span class="step-num">11</span>
+        <span class="step-label">Historial final de ramas — git log</span>
+        <div class="step-line"></div>
+    </div>
+
+    <div class="git-graph">
+        <div><span class="g-develop">* 1fc8265 (HEAD → develop)</span> <span class="g-msg">agregar respuestas a las 11 preguntas del taller de git</span></div>
+        <div><span class="g-develop">* b2aea87</span> <span class="g-msg">agregar seccion de proyectos destacados en rama develop</span></div>
+        <div><span class="g-main">* 1a4c950 (main)</span> <span class="g-msg">agregar pagina personal de Cesax69 (Cesar Enrique Garay Garcia)</span></div>
+        <div><span class="g-hash">* f74a709</span> <span class="g-msg">primer commit inicial del repositorio</span></div>
+        <div><span class="g-hash">  ···</span> <span class="output-dim">(historial del fork del profesor)</span></div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════
+         PRÓXIMOS PASOS (pendientes de usuario)
+    ═══════════════════════════════════════════ -->
+    <div class="section-header" style="margin-top:3rem;">
+        <div class="section-icon">⏭️</div>
+        <div>
+            <div class="section-title">Próximos pasos — Pendiente de revisión</div>
+            <div class="section-subtitle">Comandos listos para ejecutar una vez revisado el repositorio local</div>
+        </div>
+    </div>
+
+    <div class="terminal">
+        <div class="terminal-titlebar">
+            <div class="dot dot-red"></div><div class="dot dot-yellow"></div><div class="dot dot-green"></div>
+            <span class="terminal-label">Comandos pendientes</span>
+        </div>
+        <div class="terminal-body">
+            <div class="cmd-line"><span class="prompt output-warning">$</span><span class="cmd"># 1. Subir rama main con Cesax69.html</span></div>
+            <div class="cmd-line"><span class="prompt output-warning">$</span><span class="cmd">git checkout main &amp;&amp; git push origin main</span></div>
+            <br>
+            <div class="cmd-line"><span class="prompt output-warning">$</span><span class="cmd"># 2. Subir rama develop</span></div>
+            <div class="cmd-line"><span class="prompt output-warning">$</span><span class="cmd">git checkout develop &amp;&amp; git push origin develop</span></div>
+            <br>
+            <div class="cmd-line"><span class="prompt output-warning">$</span><span class="cmd"># 3. Crear Pull Request en GitHub: develop → main</span></div>
+            <div class="cmd-line"><span class="prompt output-warning">$</span><span class="cmd"># → Ir a: github.com/Cesax69/git-practica-2 → Pull Requests → New</span></div>
+            <br>
+            <div class="cmd-line"><span class="prompt output-warning">$</span><span class="cmd"># 4. Fusionar (Merge) el Pull Request desde GitHub</span></div>
+        </div>
+    </div>
+
+</div>
+
+<footer>
+    Bitácora generada para el <strong>Taller Git · Práctica 2</strong> ·
+    Alumno: <strong>César Enrique Garay García</strong> (Cesax69) · 2026
+</footer>
+
+</body>
+</html>
