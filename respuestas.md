@@ -9,10 +9,10 @@
 
 ---
 
-### ❓ Pregunta 1
+### Pregunta 1
 **¿Qué sucede cuando hacemos un `git add`?**
 
-### ✅ Respuesta
+### Respuesta
 Cuando ejecutamos `git add`, le indicamos a Git que queremos **incluir los cambios de un fichero en el próximo commit**. Este comando mueve los ficheros (o los cambios dentro de ellos) desde el **directorio de trabajo** (Working Directory) hacia el **área de preparación o stage** (también llamado Staging Area o Index).
 
 Es importante entender que `git add` **no guarda los cambios de forma permanente** — solo los marca como "listos para confirmar". Es como preparar los ingredientes en la mesa antes de cocinar: aún no has cocinado, pero ya tienes todo listo.
@@ -27,10 +27,10 @@ git add .
 
 ---
 
-### ❓ Pregunta 2
+### Pregunta 2
 **¿Qué sucede cuando hacemos un `git commit`? ¿Dónde está ese commit?**
 
-### ✅ Respuesta
+### Respuesta
 Al ejecutar `git commit`, Git toma una **instantánea (snapshot) permanente** de todos los ficheros que estaban en el Staging Area y los guarda en el **historial del repositorio local**. Cada commit tiene un identificador único (hash SHA-1), el nombre del autor, la fecha y un mensaje descriptivo.
 
 **¿Dónde está ese commit?** Después de hacer `git commit`, el commit reside **únicamente en el repositorio local** de tu máquina, dentro de la carpeta `.git/`. No ha viajado a ningún servidor externo todavía.
@@ -46,20 +46,20 @@ git log --oneline
 
 ---
 
-### ❓ Pregunta 3
+### Pregunta 3
 **¿Por qué al hacer `git commit` todavía no está disponible ese commit en el repositorio remoto?**
 
-### ✅ Respuesta
+### Respuesta
 Porque Git es un **sistema de control de versiones distribuido**. Esto significa que cada desarrollador tiene una copia completa e independiente del repositorio en su propia máquina. El comando `git commit` solo actúa sobre la copia **local**: registra el cambio en la base de datos interna de Git (carpeta `.git/`) pero **no establece ninguna comunicación con internet ni con el servidor remoto** (GitHub, GitLab, etc.).
 
 El repositorio remoto y el local son dos entidades separadas. El commit existe en tu máquina pero GitHub no sabe de él hasta que tú decidas enviárselo explícitamente.
 
 ---
 
-### ❓ Pregunta 4
+### Pregunta 4
 **¿Qué hay que hacer para que veamos este commit en nuestro repositorio remoto de GitHub?**
 
-### ✅ Respuesta
+### Respuesta
 Para que el commit sea visible en GitHub, hay que **sincronizar el repositorio local con el remoto** usando el comando:
 
 ```bash
@@ -76,10 +76,10 @@ El parámetro `-u` establece el seguimiento (upstream) para que en el futuro bas
 
 ---
 
-### ❓ Pregunta 5
+### Pregunta 5
 **¿Qué diferencia hay entre hacer un fork o crear una nueva rama?**
 
-### ✅ Respuesta
+### Respuesta
 
 | Característica | Fork | Nueva Rama |
 |---|---|---|
@@ -92,10 +92,10 @@ El parámetro `-u` establece el seguimiento (upstream) para que en el futuro bas
 
 ---
 
-### ❓ Pregunta 6
+### Pregunta 6
 **¿Qué comando se utiliza para crear una nueva rama sin cambiarte a ella?**
 
-### ✅ Respuesta
+### Respuesta
 
 ```bash
 git branch nombre-de-la-rama
@@ -111,10 +111,10 @@ git switch -c nombre-de-la-rama
 
 ---
 
-### ❓ Pregunta 7
+### Pregunta 7
 **¿Cuál es la diferencia entre los comandos `git switch` y `git checkout` al trabajar con ramas?**
 
-### ✅ Respuesta
+### Respuesta
 
 Ambos comandos permiten cambiar de rama, pero tienen diferencias importantes:
 
@@ -130,10 +130,10 @@ Ambos comandos permiten cambiar de rama, pero tienen diferencias importantes:
 
 ---
 
-### ❓ Pregunta 8
+### Pregunta 8
 **¿Qué es una rama por defecto (como `main` o `master`) y por qué es importante?**
 
-### ✅ Respuesta
+### Respuesta
 La **rama por defecto** es la rama principal del repositorio — la que se crea automáticamente al inicializar el repositorio con `git init`. Históricamente se llamaba `master`, pero GitHub y la comunidad adoptaron `main` como nombre estándar más inclusivo desde 2020.
 
 **¿Por qué es importante?**
@@ -144,10 +144,10 @@ La **rama por defecto** es la rama principal del repositorio — la que se crea 
 
 ---
 
-### ❓ Pregunta 9
+### Pregunta 9
 **¿Qué comando te permite ver la lista de todas las ramas locales de tu repositorio?**
 
-### ✅ Respuesta
+### Respuesta
 
 ```bash
 git branch
@@ -167,10 +167,10 @@ git branch -r
 
 ---
 
-### ❓ Pregunta 10
+### Pregunta 10
 **En el contexto de Git, explica con tus propias palabras qué es una rama (branch) y cuál es su beneficio principal al trabajar en un proyecto de software.**
 
-### ✅ Respuesta
+### Respuesta
 Imagina que el historial de tu proyecto es una línea del tiempo. Una **rama** es como abrir una **línea del tiempo alternativa**: puedes hacer cambios, experimentar, romper cosas y probar nuevas ideas sin que nada de eso afecte a la línea del tiempo principal (main).
 
 Cuando tu experimento funciona y estás satisfecho con los cambios, puedes **fusionar** esa línea alternativa de vuelta a la principal mediante un `git merge` o un Pull Request.
@@ -179,13 +179,14 @@ Cuando tu experimento funciona y estás satisfecho con los cambios, puedes **fus
 
 ---
 
-### ❓ Pregunta 11
+### Pregunta 11
 **¿Qué ha pasado con el contenido de la carpeta `practica-taller-git`? ¿Por qué no la podemos ver en nuestro repositorio remoto de GitHub?**
 
-### ✅ Respuesta
+### Respuesta
 La carpeta `practica-taller-git` **no aparece en GitHub** porque es un **repositorio Git completamente independiente** — tiene su propia carpeta `.git/` interna. Cuando intentas añadir una carpeta que ya es un repositorio Git dentro de otro repositorio Git, Git la trata como un **submódulo** o simplemente la ignora como directorio sin rastrear sus contenidos internos.
 
-En este caso, el repositorio principal (portafolio en `practica/`) y el de la práctica (`practica-taller-git/`) son dos repositorios separados con historiales y orígenes remotos distintos. Para que `practica-taller-git` apareciera en GitHub bajo el mismo repositorio, habría que o bien:
+En este caso, el repositorio principal (portafolio en `practica/`) y el de la práctica (`practica-taller-git/`) son dos repositorios separados con historiales y orígenes remotos distintos. Para que `practica-taller-git` apareciera en GitHub bajo el mismo repositorio, habría que:
+
 1. **Eliminar la carpeta `.git/` interna** y añadir sus ficheros al repositorio padre (perdiéndose el historial de esa práctica).
 2. **Configurarla como un submódulo de Git** con `git submodule add`.
 3. **Subir `practica-taller-git` como su propio repositorio independiente** a GitHub.
@@ -194,4 +195,4 @@ La opción correcta para esta práctica sería la **3**: crear un repositorio se
 
 ---
 
-*Archivo generado como parte del Taller Git · Práctica 2 · César Enrique Garay García · Cesax69*
+*Taller Git · Práctica 2 · César Enrique Garay García · Cesax69*
