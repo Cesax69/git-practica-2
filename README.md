@@ -137,4 +137,14 @@ Desde GitHub: crear Pull Request de `develop → main` y fusionarlo.
 
 ---
 
+## Capturas
+<img width="502" height="132" alt="image" src="https://github.com/user-attachments/assets/1220baa5-0817-454b-978b-f6b78ac27e31" />
+
+<img width="619" height="112" alt="image" src="https://github.com/user-attachments/assets/ea38a435-66c6-49e8-9daa-4cac57f2c406" />
+
+<img width="753" height="425" alt="image" src="https://github.com/user-attachments/assets/068a779f-8511-4879-8bb1-4b74a95da063" />
+
+
+---
+
 *Taller Git · Práctica 2 · César Enrique Garay García · 2026*
